@@ -18,17 +18,19 @@ SELECTORS = {
 }
 
 class BingReWards:
-    def __init__(self, auth_file='auth.json', search_data_file='search_data.json', delay=5):
+    def __init__(self, auth_file='auth.json', search_data_file='search_data.json', delay=5, headless=True):
         """
         初始化 BingReWards 类。
 
         :param auth_file: 存储认证信息的 JSON 文件路径。
         :param search_data_file: 存储搜索数据的 JSON 文件路径。
         :param delay: 操作之间的延时（秒），默认为 5 秒。
+        :param headless: 是否启用无头模式，默认为 True。
         """
         self.auth_info = self.load_json_file(auth_file)
         self.search_data = self.load_json_file(search_data_file) if search_data_file else None
         self.delay = delay  # 操作之间的延时
+        self.headless = headless  # 是否启用无头模式
         self.browser = None
         self.context = None
 
@@ -157,7 +159,7 @@ class BingReWards:
         """
         启动浏览器并初始化上下文。
         """
-        self.browser = playwright.chromium.launch(headless=False)
+        self.browser = playwright.chromium.launch(headless=self.headless)
         self.context = self.browser.new_context()
         stealth_sync(self.context)  # 反检测
         self.context.add_cookies(self.auth_info['cookies'])
@@ -201,13 +203,19 @@ if __name__ == "__main__":
     parser.add_argument('--auth_file', default='auth.json', help='认证信息文件路径')
     parser.add_argument('--search_data_file', default='search_data.json', help='搜索数据文件路径')
     parser.add_argument('--delay', type=int, default=5, help='操作之间的延时（秒）')
+    parser.add_argument('--headless', action='store_true', help='是否启用无头模式')
+    parser.add_argument('--login', action='store_true', help='是否进行登录操作')
     args = parser.parse_args()
 
-    # 创建 BingReWards 实例
-    bing_integration = BingReWards(auth_file=args.auth_file, search_data_file=args.search_data_file, delay=args.delay)
+    if args.login:
+        # 登录操作，禁用无头模式
+        save_login_state(args.auth_file)
+    else:
+        # 创建 BingReWards 实例
+        bing_integration = BingReWards(auth_file=args.auth_file, search_data_file=args.search_data_file, delay=args.delay, headless=args.headless)
 
-    # 执行搜索任务
-    bing_integration.perform_searches()
+        # 执行搜索任务
+        bing_integration.perform_searches()
 
-    # 收集积分任务
-    bing_integration.collect_rewards()
+        # 收集积分任务
+        bing_integration.collect_rewards()
