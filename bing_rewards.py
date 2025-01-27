@@ -4,14 +4,13 @@ import time
 import logging
 import argparse
 from playwright.sync_api import sync_playwright, Page
-from playwright_stealth import stealth_sync
 
 # 日志配置
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # 选择器配置
 SELECTORS = {
-    'points_selector': '#rh_rwm .b_clickarea',
+    'points_selector': '#rh_rwm',
     'search_input': '#sb_form_q',
     'search_results': '#b_results',
     'rewards_card': '#daily-sets .c-card-content'
@@ -161,7 +160,6 @@ class BingReWards:
         """
         self.browser = playwright.chromium.launch(headless=self.headless)
         self.context = self.browser.new_context()
-        stealth_sync(self.context)  # 反检测
         self.context.add_cookies(self.auth_info['cookies'])
 
     def close_browser(self):
