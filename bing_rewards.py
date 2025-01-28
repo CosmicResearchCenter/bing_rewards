@@ -144,7 +144,7 @@ class BingReWards:
             self.start_browser(p)
             page = self.context.new_page()
             page.goto('https://rewards.bing.com/?ref=rewardspanel')
-            page.wait_for_selector(SELECTORS['rewards_card'])
+            page.wait_for_selector(SELECTORS['rewards_card'], state='visible')  # 确保元素可见
 
             card_contents = page.query_selector_all(SELECTORS['rewards_card'])
             for index, card in enumerate(card_contents, start=1):
@@ -203,14 +203,20 @@ if __name__ == "__main__":
     parser.add_argument('--delay', type=int, default=5, help='操作之间的延时（秒）')
     parser.add_argument('--headless', action='store_true', help='是否启用无头模式')
     parser.add_argument('--login', action='store_true', help='是否进行登录操作')
+    parser.add_argument('--visible', action='store_true', help='显示浏览器界面(默认无头模式)')
     args = parser.parse_args()
 
     if args.login:
-        # 登录操作，禁用无头模式
-        save_login_state(args.auth_file)
+        # 登录操作，强制禁用无头模式
+        save_login_state(args.auth_file, headless=False)
     else:
-        # 创建 BingReWards 实例
-        bing_integration = BingReWards(auth_file=args.auth_file, search_data_file=args.search_data_file, delay=args.delay, headless=args.headless)
+        # 创建 BingReWards 实例，默认为无头模式，除非指定 --visible
+        bing_integration = BingReWards(
+            auth_file=args.auth_file, 
+            search_data_file=args.search_data_file, 
+            delay=args.delay, 
+            headless=not args.visible
+        )
 
         # 执行搜索任务
         bing_integration.perform_searches()
