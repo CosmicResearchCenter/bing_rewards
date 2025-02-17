@@ -52,12 +52,9 @@ class BingReWards:
         """
         随机获取搜索内容。
 
-        :return: 随机的搜索词或句子。
+        :return: 随机的搜索句子。
         """
-        if random.choice([True, False]):
-            return random.choice(self.search_data['search_terms'])
-        else:
-            return random.choice(self.search_data['search_sentences'])
+        return random.choice(self.search_data['search_sentences'])
 
     def scroll_page(self, page):
         """
@@ -215,7 +212,7 @@ if __name__ == "__main__":
             auth_file=args.auth_file, 
             search_data_file=args.search_data_file, 
             delay=args.delay, 
-            headless=not args.visible
+            headless= args.visible
         )
 
         # 执行搜索任务
