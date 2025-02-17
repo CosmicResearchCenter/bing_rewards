@@ -140,16 +140,37 @@ class BingReWards:
         with sync_playwright() as p:
             self.start_browser(p)
             page = self.context.new_page()
-            page.goto('https://rewards.bing.com/?ref=rewardspanel')
-            page.wait_for_selector(SELECTORS['rewards_card'], state='visible')  # 确保元素可见
+            
+            try:
+                # 访问rewards页面
+                page.goto('https://rewards.bing.com/?ref=rewardspanel', timeout=100000)
+                
+                # 获取所有可点击的卡片
+                cards = page.query_selector_all('.mee-icon.mee-icon-AddMedium')
+                logging.info(f"找到 {len(cards)} 个可点击卡片")
 
-            card_contents = page.query_selector_all(SELECTORS['rewards_card'])
-            for index, card in enumerate(card_contents, start=1):
-                card.click()
-                time.sleep(random.uniform(self.delay - 2, self.delay + 2))  # 随机延时
+                # 依次点击每个卡片并处理新页面
+                for index, card in enumerate(cards, 1):
+                    logging.info(f"正在点击第 {index} 个卡片...")
+                    
+                    # 点击卡片并等待新页面
+                    with page.expect_popup() as new_page_info:
+                        card.click()
+                    
+                    # 获取新页面并关闭
+                    new_page = new_page_info.value
+                    new_page.close()
+                    
+                    # 随机延时5-10秒
+                    sleep_time = random.uniform(5, 10)
+                    time.sleep(sleep_time)
 
-            page.reload()
-            self.close_browser()
+                logging.info("所有卡片点击完成！")
+
+            except Exception as e:
+                logging.error(f"收集积分时出错: {str(e)}")
+            finally:
+                self.close_browser()
 
     def start_browser(self, playwright):
         """
