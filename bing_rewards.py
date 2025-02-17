@@ -205,7 +205,7 @@ if __name__ == "__main__":
 
     if args.login:
         # 登录操作，强制禁用无头模式
-        save_login_state(args.auth_file, headless=False)
+        save_login_state(args.auth_file)
     else:
         # 创建 BingReWards 实例，默认为无头模式，除非指定 --visible
         bing_integration = BingReWards(
