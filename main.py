@@ -54,16 +54,19 @@ async def main():
                     break
 
                 account = random.choice(unfinished_accounts)
-                logging.info(f"选中账号 {account} 进行搜索任务。")
+                # 随机选择一个搜索内容
+                search_data1 = random.choice(search_datas)
+                search_data2 = random.choice(search_datas)
+                logging.info(f"选中账号 {account} 进行搜索任务，搜索内容：{search_data1.title}和{search_data2.title}")
                 try:
                     bing = BingReWards(headless=False, storage_state=account)
-                    await bing.search(search_datas[0].title, search_datas[0].description)
+                    await bing.search(search_data1.title, search_data2.title)
                 except Exception as e:
                     logging.exception(f"账号 {account} 在执行搜索任务时发生异常：")
             except Exception as e:
                 logging.exception("搜索任务循环中发生异常：")
             finally:
-                await asyncio.sleep(20)
+                await asyncio.sleep(5)
 
     except Exception as e:
         logging.exception("程序运行时发生异常：")
