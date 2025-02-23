@@ -77,7 +77,8 @@ async def main():
             except Exception as e:
                 logging.exception("搜索任务循环中发生异常：")
             finally:
-                await asyncio.sleep(500)
+                sleep_time = random.randint(300,700)
+                await asyncio.sleep(sleep_time)
 
     except Exception as e:
         logging.exception("程序运行时发生异常：")
