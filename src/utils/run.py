@@ -1,6 +1,6 @@
 import argparse
 import logging
-from bing_rewards import BingReWards, save_login_state
+from src.core.bing_rewards import BingReWards, save_login_state
 
 # 日志配置
 logging.basicConfig(

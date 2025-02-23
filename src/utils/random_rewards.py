@@ -4,7 +4,7 @@ import time
 import logging
 import json
 from datetime import datetime
-from bing_rewards import BingReWards
+from src.core.bing_rewards import BingReWards
 
 # 配置日志
 logging.basicConfig(
