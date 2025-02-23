@@ -26,7 +26,7 @@ class BingReWards:
             self.context = None
             self.page = None
 
-    async def search(self, query1, query2, sleep_time=5):
+    async def search(self, query1, query2, sleep_time=60):
         try:
             await self._initialize_browser()
             await self.page.goto("https://cn.bing.com/")
