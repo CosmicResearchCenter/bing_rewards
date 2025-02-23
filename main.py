@@ -31,12 +31,12 @@ async def main():
         for account in accounts:
             try:
                 bing = BingReWards(headless=True, storage_state=account)
-                bing.task_points()
+                await bing.task_points()  # 添加 await
                 logging.info(f"已对账号 {account} 领取积分任务。")
             except Exception as e:
                 logging.exception(f"账号 {account} 在领取积分任务时发生异常：")
             finally:
-                time.sleep(20)
+                await asyncio.sleep(20)  # 使用 asyncio.sleep 替代 time.sleep
 
         # 搜索任务     
         try:
