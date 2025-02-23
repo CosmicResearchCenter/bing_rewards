@@ -27,7 +27,18 @@ async def main():
         if not accounts:
             logging.error("没有找到账号文件，请检查 'accounts' 目录。")
             return
+        # 领取积分任务
+        for account in accounts:
+            try:
+                bing = BingReWards(headless=True, storage_state=account)
+                bing.task_points()
+                logging.info(f"已对账号 {account} 领取积分任务。")
+            except Exception as e:
+                logging.exception(f"账号 {account} 在领取积分任务时发生异常：")
+            finally:
+                time.sleep(20)
 
+        # 搜索任务     
         try:
             search_datas = TopHot().get_hot_data()
             if not search_datas:
@@ -43,7 +54,7 @@ async def main():
                 unfinished_accounts = []
                 for account in accounts:
                     try:
-                        bing = BingReWards(headless=False, storage_state=account)
+                        bing = BingReWards(headless=True, storage_state=account)
                         if not await bing.get_point_progress():
                             unfinished_accounts.append(account)
                     except Exception as e:
@@ -59,14 +70,14 @@ async def main():
                 search_data2 = random.choice(search_datas)
                 logging.info(f"选中账号 {account} 进行搜索任务，搜索内容：{search_data1.title}和{search_data2.title}")
                 try:
-                    bing = BingReWards(headless=False, storage_state=account)
+                    bing = BingReWards(headless=True, storage_state=account)
                     await bing.search(search_data1.title, search_data2.title)
                 except Exception as e:
                     logging.exception(f"账号 {account} 在执行搜索任务时发生异常：")
             except Exception as e:
                 logging.exception("搜索任务循环中发生异常：")
             finally:
-                await asyncio.sleep(5)
+                await asyncio.sleep(500)
 
     except Exception as e:
         logging.exception("程序运行时发生异常：")
