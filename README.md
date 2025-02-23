@@ -21,7 +21,7 @@
 
 1. 克隆代码仓库：
 ```bash
-git clone https://github.com/yourusername/bing_rewards.git
+git clone https://github.com/CosmicResearchCenter/bing_rewards.git
 cd bing_rewards
 ```
 
