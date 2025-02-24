@@ -27,16 +27,7 @@ async def main():
         if not accounts:
             logging.error("没有找到账号文件，请检查 'accounts' 目录。")
             return
-        # 领取积分任务
-        for account in accounts:
-            try:
-                bing = BingReWards(headless=True, storage_state=account)
-                await bing.task_points()  # 添加 await
-                logging.info(f"已对账号 {account} 领取积分任务。")
-            except Exception as e:
-                logging.exception(f"账号 {account} 在领取积分任务时发生异常：")
-            finally:
-                await asyncio.sleep(20)  # 使用 asyncio.sleep 替代 time.sleep
+        
 
         # 搜索任务     
         try:
@@ -79,6 +70,17 @@ async def main():
             finally:
                 sleep_time = random.randint(300,700)
                 await asyncio.sleep(sleep_time)
+        
+        # 领取积分任务
+        for account in accounts:
+            try:
+                bing = BingReWards(headless=True, storage_state=account)
+                await bing.task_points()  # 添加 await
+                logging.info(f"已对账号 {account} 领取积分任务。")
+            except Exception as e:
+                logging.exception(f"账号 {account} 在领取积分任务时发生异常：")
+            finally:
+                await asyncio.sleep(20)  # 使用 asyncio.sleep 替代 time.sleep
 
     except Exception as e:
         logging.exception("程序运行时发生异常：")
