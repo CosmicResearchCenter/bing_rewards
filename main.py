@@ -1,6 +1,6 @@
 import asyncio
 from src.core.bing_rewards import BingReWards
-from src.utils.tophot import TopHot
+from src.utils.weibohot import WeiboHot
 import random
 import time
 import logging
@@ -31,7 +31,7 @@ async def main():
 
         # 搜索任务     
         try:
-            search_datas = TopHot().get_hot_data()
+            search_datas = WeiboHot().get_hot_data()
             if not search_datas:
                 logging.error("没有获取到搜索任务数据！")
                 return
