@@ -75,10 +75,16 @@ class BingReWards:
             await self._initialize_browser()
             await self.page.goto('https://rewards.bing.com/?ref=rewardspanel', timeout=100000)
 
-            breakdown_button = await self.page.wait_for_selector('.pointbreakdownlink.ng-scope.c-call-to-action.c-glyph.f-lightweight')
+            # 先获取第一个 pointsBreakdownCard 元素
+            card_element = await self.page.wait_for_selector('.pointsBreakdownCard.ng-scope')
+            logging.info("已找到积分卡片元素")
+
+            # 在该卡片内查找进度详情链接
+            breakdown_button = await card_element.wait_for_selector('.pointbreakdownlink.ng-scope.c-call-to-action.c-glyph.f-lightweight')
             await breakdown_button.click()
             logging.info("已点击积分详情按钮")
 
+            # 获取积分进度
             progress_element = await self.page.wait_for_selector('p.pointsDetail')
             progress_text = await progress_element.inner_text()
             progress_text = progress_text.strip()
