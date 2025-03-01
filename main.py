@@ -28,7 +28,7 @@ async def main():
             logging.error("没有找到账号文件，请检查 'accounts' 目录。")
             return
         
-
+        num = len(accounts)
         # 搜索任务     
         try:
             search_datas = WeiboHot().get_hot_data()
@@ -39,7 +39,11 @@ async def main():
             logging.exception("获取搜索任务数据时发生异常：")
             return
 
+        i = 0
+
         while True:
+            if i > 30*num:
+                break
             try:
                 # 筛选出未完成积分任务的账号
                 unfinished_accounts = []
@@ -70,7 +74,8 @@ async def main():
             finally:
                 sleep_time = random.randint(300,700)
                 await asyncio.sleep(sleep_time)
-        
+            
+            i+=1
         # 领取积分任务
         for account in accounts:
             try:
