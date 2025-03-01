@@ -42,7 +42,7 @@ async def main():
         i = 0
 
         while True:
-            if i > 30*num:
+            if i > 50*num:
                 break
             try:
                 # 筛选出未完成积分任务的账号
